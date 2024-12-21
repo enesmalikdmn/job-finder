@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Job Finder
+
+A Job Finder application that allows users to search, filter, and apply for job listings. It uses React, Next.js, Zustand, React Query, Formik, Yup, and Tailwind CSS to build an intuitive and responsive job search platform.
+
+## Technologies Used
+- **Next.js** - React framework for server-side rendering.
+- **React** - JavaScript library for building user interfaces.
+- **Zustand** - A small, fast, and scalable state management tool for React.
+- **React Query** - For data fetching, caching, and synchronization.
+- **Formik** - A library for building forms in React.
+- **Yup** - A JavaScript schema builder for value parsing and validation.
+- **Tailwind CSS** - A utility-first CSS framework.
+- **TypeScript** - Superset of JavaScript that adds static types.
+- **ESLint** - For linting and maintaining code quality.
+
+## Features
+- **Authentication**: Users can register and login to access job listings.
+- **Job Listings**: Display a list of available jobs.
+- **Job Applications**: Users can apply for jobs directly from the listing page.
+- **Responsive Design**: Fully responsive and mobile-friendly interface.
+- **API Integration**: Uses provided API to fetch job listings and handle applications.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+To get started, you'll need to have the following installed:
+- **Node.js** (Recommended version: v16 or above)
+- **npm** or **yarn** (package managers)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Installation
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repository to your local machine:
+   ```bash
+   git clone https://github.com/your-username/job-finder.git
