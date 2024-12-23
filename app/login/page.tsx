@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input, VStack, Text } from '@chakra-ui/react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { useRouter } from 'next/navigation';
-import { loginSchema } from './validation';
+import { loginSchema } from './validation'; // Schema dosyasını import ediyoruz
+import { loginUser } from '../services/authService'; // authService'den loginUser fonksiyonunu import ediyoruz
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -12,8 +13,8 @@ const Login = () => {
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     try {
-    //   api call
-      router.push('/job-listings');
+      await loginUser(values.email, values.password); // API çağrısı
+      router.push('/job-listings'); // Başarılı giriş sonrası yönlendirme
     } catch (error) {
       setErrorMessage('Invalid email or password');
     }
@@ -23,7 +24,7 @@ const Login = () => {
     <Box width="400px" margin="auto" padding="20px" boxShadow="md">
       <Formik
         initialValues={{ email: '', password: '' }}
-        validationSchema={loginSchema}
+        validationSchema={loginSchema} // validate işlemi
         onSubmit={handleSubmit}
       >
         <Form>

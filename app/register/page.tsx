@@ -2,81 +2,80 @@
 
 import { useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input, VStack, Text } from '@chakra-ui/react';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
-import { registerSchema } from './validation';
+import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-
+import { registerSchema } from './validation';
+import { registerUser } from '../services/authService';  // authService dosyasını import ediyoruz
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleSubmit = async (values: { email: string; password: string }) => {
-    try {
-    // api call 
-      router.push('/login');
-    } catch (error) {
-      setErrorMessage('Registration failed');
-    }
-  };
+  const formik = useFormik({
+    initialValues: { email: '', password: '' },
+    validationSchema: registerSchema,
+    onSubmit: async (values) => {
+      try {
+        await registerUser(values.email, values.password);
+        router.push('/job-listings');  // Kayıt başarılıysa job-listings sayfasına yönlendiriyoruz
+      } catch (error) {
+        console.error('Error during registration:', error); // Hata loglama
+        setErrorMessage('Registration failed');
+      }
+    },
+  });
 
   return (
     <Box width="400px" margin="auto" padding="20px" boxShadow="md">
-      <Formik
-        initialValues={{ email: '', password: '', confirmPassword: '' }}
-        validationSchema={registerSchema}
-        onSubmit={handleSubmit}
-      >
-        <Form>
-          <VStack spacing={4} align="flex-start">
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <Field
-                name="email"
-                as={Input}
-                type="email"
-                id="email"
-                placeholder="Enter your email"
-              />
-              <ErrorMessage name="email" component="div" style={{ color: 'red' }} />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
-              <Field
-                name="password"
-                as={Input}
-                type="password"
-                id="password"
-                placeholder="Enter your password"
-              />
-              <ErrorMessage name="password" component="div" style={{ color: 'red' }} />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-              <Field
-                name="confirmPassword"
-                as={Input}
-                type="password"
-                id="confirmPassword"
-                placeholder="Confirm your password"
-              />
-              <ErrorMessage name="confirmPassword" component="div" style={{ color: 'red' }} />
-            </FormControl>
-
-            {errorMessage && (
+      <form onSubmit={formik.handleSubmit}>
+        <VStack spacing={4} align="flex-start">
+          <FormControl isInvalid={formik.touched.email && !!formik.errors.email}>
+            <FormLabel htmlFor="email">Email</FormLabel>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+            />
+            {formik.touched.email && formik.errors.email && (
               <Text color="red" fontSize="sm">
-                {errorMessage}
+                {formik.errors.email}
               </Text>
             )}
+          </FormControl>
 
-            <Button type="submit" colorScheme="teal" width="100%">
-              Register
-            </Button>
-          </VStack>
-        </Form>
-      </Formik>
+          <FormControl isInvalid={formik.touched.password && !!formik.errors.password}>
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+            />
+            {formik.touched.password && formik.errors.password && (
+              <Text color="red" fontSize="sm">
+                {formik.errors.password}
+              </Text>
+            )}
+          </FormControl>
+
+          {errorMessage && (
+            <Text color="red" fontSize="sm">
+              {errorMessage}
+            </Text>
+          )}
+
+          <Button type="submit" colorScheme="teal" width="100%" isLoading={formik.isSubmitting}>
+            Register
+          </Button>
+        </VStack>
+      </form>
     </Box>
   );
 };

@@ -10,12 +10,12 @@ const Header = ({ short }: { short?: boolean }) => {
 
   // Token kontrolü
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     setIsLoggedIn(!!token);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
     setIsLoggedIn(false);
     router.push('/login');
   };

@@ -31,7 +31,7 @@ const Footer = () => {
         <Divider orientation="vertical" borderColor="gray.400" h="75%" mx={4} />
 
         {/* Sağ taraf */}
-        <Box className="w-1/2 h-2/3 pl-4 flex items-end text-left">
+        <Box className="w-1/2 h-2/3 pl-4 flex gap-2 items-end text-left">
           <Text className="text-sm">© 2010 — 2024</Text>
           <Text className="text-sm mt-2">Privacy — Terms</Text>
         </Box>

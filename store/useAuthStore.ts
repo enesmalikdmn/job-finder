@@ -1,11 +1,21 @@
-import { create } from "zustand";
+import {create} from 'zustand';
 
-interface AuthState {
-  isLoggedIn: boolean;
-  setIsLoggedIn: (loggedIn: boolean) => void;
+interface UserState {
+  user: {
+    email: string | null;
+    id: string | null;
+    profileImage: string | null;
+  };
+  setUser: (userData: any) => void;
+  clearUser: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  isLoggedIn: false,
-  setIsLoggedIn: (loggedIn) => set({ isLoggedIn: loggedIn }),
+export const useUserStore = create<UserState>((set) => ({
+  user: {
+    email: null,
+    id: null,
+    profileImage: null,
+  },
+  setUser: (userData) => set({ user: userData }),
+  clearUser: () => set({ user: { email: null, id: null, profileImage: null } }),
 }));
