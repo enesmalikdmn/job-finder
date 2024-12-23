@@ -1,12 +1,17 @@
-// pages/job-listings.tsx
-// import JobList from '../app/components/JobList';
-// import Sidebar from '../app/components/Sidebar';
-export const metadata = {
-    
-  title: 'Job Listings',
-  description: 'Find your dream job!',
-}
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 const JobListingsPage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+
+    if (!token) router.push('/login');
+  }, [router]);
+
   return (
     <div style={{ display: 'flex' }}>
       Job listing
