@@ -1,6 +1,6 @@
 'use client';
 
-import { Flex, Heading, Button, Box, Menu, MenuButton, MenuList, MenuItem, IconButton, Avatar } from '@chakra-ui/react';
+import { Flex, Heading, Button, Box, Menu, MenuButton, MenuList, MenuItem, IconButton, Avatar, Text } from '@chakra-ui/react';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -53,7 +53,7 @@ const Header = ({ short }: { short?: boolean }) => {
         <Box display={{ base: 'none', md: 'flex' }} alignItems="center">
           {isLoggedIn ? (
             <Flex alignItems="center" gap={6}>
-              <Button
+              {/* <Button
                 colorScheme="blue"
                 variant="outline"
                 onClick={() => router.push('/job-listings')}
@@ -62,7 +62,15 @@ const Header = ({ short }: { short?: boolean }) => {
               </Button>
               <Button colorScheme="red" variant="outline" onClick={handleLogout}>
                 Logout
-              </Button>
+              </Button> */}
+               <div className='flex items-center gap-4 font-bold'>
+                <Text className='cursor-pointer underline text-[#3B82F6]' onClick={() => router.push('/job-listings')}>
+                  Job Listings
+                </Text>
+                <Text className='cursor-pointer underline' onClick={handleLogout}>
+                  Logout
+                </Text>
+              </div>
               <Flex alignItems="center" gap={3}>
                 <p className="font-bold">{user.email}</p>
                 <Avatar
