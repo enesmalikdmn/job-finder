@@ -19,6 +19,9 @@ const Header = ({ short }: { short?: boolean }) => {
   const handleLogout = () => {
     router.push('/login');
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    localStorage.removeItem('appliedJobs');
     setIsLoggedIn(false);
   };
 
