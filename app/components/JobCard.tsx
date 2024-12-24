@@ -1,14 +1,16 @@
 import { Box, Text, Button, Tag, HStack } from '@chakra-ui/react';
+import { TfiBag } from "react-icons/tfi";
+
 export const JobCard = ({ job }: { job: any }) => {
   return (
-    <Box className="flex flex-col lg:flex-row border rounded-lg p-4 shadow-md gap-4">
+    <Box className="flex flex-col lg:flex-row border rounded-lg p-6 shadow-md gap-6">
       <Box className="flex flex-col lg:flex-shrink-0">
-        <span>icon</span>
+        <TfiBag size={36} />
       </Box>
       <Box className="flex flex-col lg:flex-1">
         <Box className="flex items-center gap-2">
           <Text fontWeight="bold" fontSize="lg">
-            {job.companyName} - {job.jobName}
+            {job.companyName} - {job.name}
           </Text>
         </Box>
         <Text className="text-gray-600 mt-2">{job.description}</Text>

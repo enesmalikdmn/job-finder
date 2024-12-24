@@ -4,27 +4,27 @@ const API_URL = process.env.NEXT_PUBLIC_JOB_API_BASE_URL;
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-  },
 });
 
 /**
  * Jobs listesini almak için API çağrısı.
  *
- * @param {number} page Sayfa numarası
- * @param {number} perPage Her sayfadaki öğe sayısı
- * @param {Object} orderBy Sıralama için alan ve yön (field, direction)
- * @param {Object} search Arama için alan ve sorgu (field, query)
+ * @param {Object} options API parametreleri (page, perPage, orderBy, search)
  * @returns {Promise} API'den dönen job listesi
  */
-export const getJobs = async (
-  page: number = 1,
-  perPage: number = 20,
-  orderBy: { field?: string; direction?: 'asc' | 'desc' } = {},
-  search: { field?: string; query?: string } = {}
-) => {
+export const getJobs = async ({
+  page = 1,
+  perPage = 20,
+  orderBy = {},
+  search = {},
+}: {
+  page?: number;
+  perPage?: number;
+  orderBy?: { field?: string; direction?: 'asc' | 'desc' };
+  search?: { field?: string; query?: string };
+}) => {
   try {
+    const token = localStorage.getItem('accessToken');
     const params: Record<string, string | number> = {
       page,
       perPage,
@@ -40,8 +40,13 @@ export const getJobs = async (
       params[`search[query]`] = search.query;
     }
 
-    const response = await axiosInstance.get('/jobs', { params });
-    
+    const response = await axiosInstance.get('/jobs', {
+      params,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     return response.data;
   } catch (error: any) {
     console.error('Error fetching jobs:', error.response?.data || error.message);
