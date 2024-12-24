@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getJobs } from "../services/jobService";
 import { JobCard } from "../components/JobCard";
@@ -15,13 +15,22 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
+import { useRouter } from 'next/navigation';
 
 const JobListings = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [field, setField] = useState("companyName");
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [jobsPerPage, setJobsPerPage] = useState(20);  // Default value set to 20
+  const [jobsPerPage, setJobsPerPage] = useState(20); // Default value set to 20
+  const router = useRouter();
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      router.push("/login"); // Redirect to login page if no accessToken
+    }
+  }, [router]);
 
   const fetchJobs = async () => {
     setIsLoading(true);
@@ -106,8 +115,7 @@ const JobListings = () => {
             )}
           </Box>
         )}
-        <div className="flex items-center mt-4 w-full"
-        >
+        <div className="flex items-center mt-4 w-full">
           <Flex
             className="flex w-full"
             justifyContent="center"
@@ -153,17 +161,16 @@ const JobListings = () => {
             >
               Next Page
             </Button>
-
           </Flex>
-            <Select
-              value={jobsPerPage}
-              onChange={(e) => setJobsPerPage(Number(e.target.value))}
-              width="6rem"
-            >
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-            </Select>
+          <Select
+            value={jobsPerPage}
+            onChange={(e) => setJobsPerPage(Number(e.target.value))}
+            width="6rem"
+          >
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </Select>
         </div>
       </Box>
     </Box>
