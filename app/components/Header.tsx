@@ -31,11 +31,11 @@ const Header = ({ short }: { short?: boolean }) => {
       align="center" 
       justify="space-between"
     >
-      <Heading size={short ? 'md' : 'lg'}>Job Finder</Heading>
+      <Heading className='cursor-pointer' size={short ? 'md' : 'lg'} onClick={() => router.push('/')}>Job Finder</Heading>
       {!short && (
         <Flex>
           {isLoggedIn ? (
-            <>
+            <div className='flex gap-12'>
               <div className='flex items-center'>
                 <Button colorScheme="blue" variant="outlined" onClick={() => router.push('/job-listings')}>
                   Job Listings
@@ -44,7 +44,7 @@ const Header = ({ short }: { short?: boolean }) => {
                   Logout
                 </Button>
               </div>
-              <div className='flex items-center gap-4'>
+              <div className='flex items-center gap-3'>
                 <p className="font-bold text-gray-500">{user.email}</p>
                 <div className="w-12 h-12 rounded-full bg-gray-400">
                   <img
@@ -56,7 +56,7 @@ const Header = ({ short }: { short?: boolean }) => {
                   />
                 </div>
               </div>
-            </>
+            </div>
           ) : (
             <>
               <Button colorScheme="blue" variant="outline" mr={4} onClick={() => router.push('/login')}>
