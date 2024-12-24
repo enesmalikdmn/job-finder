@@ -15,9 +15,9 @@ const Header = ({ short }: { short?: boolean }) => {
   }, []);
 
   const handleLogout = () => {
+    router.push('/login');
     localStorage.removeItem('accessToken');
     setIsLoggedIn(false);
-    router.push('/login');
   };
 
   return (
@@ -33,9 +33,14 @@ const Header = ({ short }: { short?: boolean }) => {
       {!short && (
         <Flex>
           {isLoggedIn ? (
-            <Button colorScheme="red" variant="solid" onClick={handleLogout}>
-              Logout
-            </Button>
+            <>
+              <Button colorScheme="blue" variant="outlined" onClick={() => router.push('/job-listings')}>
+                Job Listings
+              </Button>
+              <Button colorScheme="red" variant="outlined" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
           ) : (
             <>
               <Button colorScheme="blue" variant="outline" mr={4} onClick={() => router.push('/login')}>
