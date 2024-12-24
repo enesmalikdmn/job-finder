@@ -1,12 +1,14 @@
 'use client';
 
-import { Box, Flex, Heading, Button } from '@chakra-ui/react';
+import { Flex, Heading, Button } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // Next.js'in `useRouter` hook'u
+import { useUserStore } from '../../store/useAuthStore';
 
 const Header = ({ short }: { short?: boolean }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter(); // Router nesnesini alın
+  const { user } = useUserStore();
 
   // Token kontrolü
   useEffect(() => {
@@ -34,12 +36,26 @@ const Header = ({ short }: { short?: boolean }) => {
         <Flex>
           {isLoggedIn ? (
             <>
-              <Button colorScheme="blue" variant="outlined" onClick={() => router.push('/job-listings')}>
-                Job Listings
-              </Button>
-              <Button colorScheme="red" variant="outlined" onClick={handleLogout}>
-                Logout
-              </Button>
+              <div className='flex items-center'>
+                <Button colorScheme="blue" variant="outlined" onClick={() => router.push('/job-listings')}>
+                  Job Listings
+                </Button>
+                <Button colorScheme="red" variant="outlined" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </div>
+              <div className='flex items-center gap-4'>
+                <p className="font-bold text-gray-500">{user.email}</p>
+                <div className="w-12 h-12 rounded-full bg-gray-400">
+                  <img
+                    src={user.profileImage || '/default-profile.png'} 
+                    alt="Profile"
+                    className="w-full h-full rounded-full"
+                    width={36} 
+                    height={36} 
+                  />
+                </div>
+              </div>
             </>
           ) : (
             <>
