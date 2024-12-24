@@ -1,4 +1,4 @@
-import { Box, Text, Button, Tag, HStack, useToast } from "@chakra-ui/react";
+import { Box, Text, Button, Tag, HStack, Wrap, WrapItem, useToast } from "@chakra-ui/react";
 import { TfiBag } from "react-icons/tfi";
 import { useDisclosure } from "@chakra-ui/react";
 import { DetailModal } from "../components/DetailModal";
@@ -9,7 +9,7 @@ import { useJobStore } from "../../store/useJobStore";
 export const JobCard = ({ job }: { job: any }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const { jobs } = useJobStore(); 
+  const { jobs } = useJobStore();
 
   const hasApplied = jobs.some((storedJob) => storedJob.id === job.id);
 
@@ -92,21 +92,23 @@ export const JobCard = ({ job }: { job: any }) => {
           Location: {job.location}
         </Text>
         <Text className="text-sm text-gray-500">Salary: {job.salary}$</Text>
-        <HStack spacing={2} className="mt-2">
+        {/* Wrap Tags to make them responsive */}
+        <Wrap spacing={2} className="mt-2">
           {job.keywords?.map((tag: string, index: number) => (
-            <Tag
-              key={index}
-              colorScheme="teal"
-              borderRadius="full"
-              _hover={{
-                bg: "teal.500",
-                color: "white",
-              }}
-            >
-              {tag}
-            </Tag>
+            <WrapItem key={index}>
+              <Tag
+                colorScheme="teal"
+                borderRadius="full"
+                _hover={{
+                  bg: "teal.500",
+                  color: "white",
+                }}
+              >
+                {tag}
+              </Tag>
+            </WrapItem>
           ))}
-        </HStack>
+        </Wrap>
       </Box>
       <Box className="flex flex-col lg:items-end lg:flex-shrink-0 gap-2">
         <Button
@@ -141,7 +143,6 @@ export const JobCard = ({ job }: { job: any }) => {
         ) : (
           ''
         )}
-    
       </Box>
 
       <DetailModal
