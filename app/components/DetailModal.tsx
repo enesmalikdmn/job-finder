@@ -35,7 +35,7 @@ export const DetailModal = ({
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Apply Job</ModalHeader>
+        <ModalHeader textAlign="center">Apply Job</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <VStack align="start" spacing={4}>

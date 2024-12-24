@@ -1,4 +1,4 @@
-import { Box, Text, Button, Tag, HStack } from '@chakra-ui/react';
+import { Box, Text, Button, Tag, HStack, useToast } from '@chakra-ui/react';
 import { TfiBag } from 'react-icons/tfi';
 import { useDisclosure } from '@chakra-ui/react';
 import { DetailModal } from '../components/DetailModal';
@@ -7,26 +7,53 @@ import { applyToJob, withdrawFromJob } from '../services/jobService';
 
 export const JobCard = ({ job }: { job: any }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
-  // Apply Mutation
   const applyMutation = useMutation({
     mutationFn: applyToJob,
     onSuccess: () => {
-      console.log(`Successfully applied to job: ${job.id}`);
+      toast({
+        title: 'Application Successful',
+        description: `You have successfully applied to job: ${job.name}.`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
     },
     onError: (error) => {
-      console.error('Error applying to job:', error);
+      toast({
+        title: 'Application Failed',
+        description: `Could not apply to job: ${job.name}. Please try again.`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
     },
   });
 
-  // Withdraw Mutation
   const withdrawMutation = useMutation({
     mutationFn: withdrawFromJob,
     onSuccess: () => {
-      console.log(`Successfully withdrew from job: ${job.id}`);
+      toast({
+        title: 'Withdraw Successful',
+        description: `You have successfully withdrawn from job: ${job.name}.`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
     },
     onError: (error) => {
-      console.error('Error withdrawing from job:', error);
+      toast({
+        title: 'Withdraw Failed',
+        description: `Could not withdraw from job: ${job.name}. Please try again.`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
     },
   });
 
@@ -70,7 +97,6 @@ export const JobCard = ({ job }: { job: any }) => {
           variant="outline"
           w="full"
           onClick={() => handleWithdraw(job.id)}
-          isLoading={withdrawMutation.isLoading}
         >
           Withdraw
         </Button>
