@@ -4,10 +4,14 @@ import { useDisclosure } from "@chakra-ui/react";
 import { DetailModal } from "../components/DetailModal";
 import { useMutation } from "@tanstack/react-query";
 import { applyToJob, withdrawFromJob } from "../services/jobService";
+import { useJobStore } from "../../store/useJobStore";
 
 export const JobCard = ({ job }: { job: any }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const { jobs } = useJobStore(); 
+
+  const hasApplied = jobs.some((storedJob) => storedJob.id === job.id);
 
   const applyMutation = useMutation({
     mutationFn: applyToJob,
@@ -21,7 +25,7 @@ export const JobCard = ({ job }: { job: any }) => {
         position: "top",
       });
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: "Application Failed",
         description: `Could not apply to job: ${job.name}. Please try again.`,
@@ -45,7 +49,7 @@ export const JobCard = ({ job }: { job: any }) => {
         position: "top",
       });
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: "Withdraw Failed",
         description: `Could not withdraw from job: ${job.name}. Please try again.`,
@@ -114,23 +118,30 @@ export const JobCard = ({ job }: { job: any }) => {
           }}
           size="sm"
           w="full"
+          minWidth="8rem"
           onClick={onOpen}
         >
           Detail
         </Button>
-        <Button
-          colorScheme="red"
-          size="sm"
-          variant="outline"
-          _hover={{
-            bg: "red.100",
-            borderColor: "red.600",
-          }}
-          w="full"
-          onClick={() => handleWithdraw(job.id)}
-        >
-          Withdraw
-        </Button>
+        {hasApplied ? (
+          <Button
+            colorScheme="red"
+            size="sm"
+            variant="outline"
+            _hover={{
+              bg: "red.100",
+              borderColor: "red.600",
+            }}
+            w="full"
+            minWidth="8rem"
+            onClick={() => handleWithdraw(job.id)}
+          >
+            Withdraw
+          </Button>
+        ) : (
+          ''
+        )}
+    
       </Box>
 
       <DetailModal
