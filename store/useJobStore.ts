@@ -16,14 +16,23 @@ interface JobState {
   removeJob: (jobId: string) => void;
 }
 
+const loadJobsFromStorage = (): Job[] => {
+  const storedJobs = localStorage.getItem("appliedJobs");
+  return storedJobs ? JSON.parse(storedJobs) : [];
+};
+
 export const useJobStore = create<JobState>((set) => ({
-  jobs: [],
+  jobs: loadJobsFromStorage(),
   addJob: (job) =>
-    set((state) => ({
-      jobs: [...state.jobs, job],
-    })),
+    set((state) => {
+      const updatedJobs = [...state.jobs, job];
+      localStorage.setItem("appliedJobs", JSON.stringify(updatedJobs)); // localStorage'a kaydet
+      return { jobs: updatedJobs };
+    }),
   removeJob: (jobId) =>
-    set((state) => ({
-      jobs: state.jobs.filter((job) => job.id !== jobId),
-    })),
+    set((state) => {
+      const updatedJobs = state.jobs.filter((job) => job.id !== jobId);
+      localStorage.setItem("appliedJobs", JSON.stringify(updatedJobs)); // localStorage'ı güncelle
+      return { jobs: updatedJobs };
+    }),
 }));
