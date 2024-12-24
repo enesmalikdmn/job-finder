@@ -12,24 +12,56 @@ const axiosInstance = axios.create({
 });
 
 // Authorization token ekleme
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// Response interceptor
+const refreshToken = async () => {
+  const refresh = localStorage.getItem('refreshToken');
+  if (refresh) {
+    try {
+      const response = await axios.post(`${API_URL}/refresh`, { refreshToken: refresh });
+      const { accessToken } = response.data;
+
+      // Yeni access token'ı localStorage'a kaydet
+      localStorage.setItem('accessToken', accessToken);
+      return accessToken;
+    } catch (error) {
+      console.error('Refresh token error:', error);
+      throw new Error('Failed to refresh token');
+    }
+  }
+  throw new Error('No refresh token available');
+};
+
+// Response interceptor - Token yenileme işlemi burada yapılacak
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => {
-    console.error('API Error:', error.response?.data || error.message);
-    return Promise.reject(error);
+  async (error) => {
+    const originalRequest = error.config;
+    // Eğer 401 hatası alındıysa ve henüz yenileme yapılmadıysa
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;  // Yeniden deneyin
+      try {
+        const newToken = await refreshToken(); // Yeni token al
+        originalRequest.headers['Authorization'] = `Bearer ${newToken}`; // Yeni token'ı başlığa ekle
+        return axios(originalRequest); // Yeniden orijinal isteği gönder
+      } catch (refreshError) {
+        console.error('Token refresh failed:', refreshError);
+        return Promise.reject(refreshError); // Token yenileme başarısızsa hatayı reddet
+      }
+    }
+    return Promise.reject(error); // Diğer hatalar için
   }
 );
 
-// İş listesi API çağrısı
 export const getJobs = async ({
   page = 1,
   perPage = 20,
@@ -57,7 +89,6 @@ export const getJobs = async ({
   return response.data;
 };
 
-// İş başvurusu yap
 export const applyToJob = async (jobId: string) => {
   const response = await axiosInstance.post(`/jobs/${jobId}/apply`);
   const jobResponse = await axiosInstance.get(`/jobs/${jobId}`); // İş detaylarını al
@@ -70,7 +101,6 @@ export const applyToJob = async (jobId: string) => {
   return response.data;
 };
 
-// İş başvurusunu geri çek
 export const withdrawFromJob = async (jobId: string) => {
   const response = await axiosInstance.post(`/jobs/${jobId}/withdraw`);
 
