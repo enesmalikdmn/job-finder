@@ -1,9 +1,9 @@
-import { Box, Text, Button, Tag, HStack, useToast } from '@chakra-ui/react';
-import { TfiBag } from 'react-icons/tfi';
-import { useDisclosure } from '@chakra-ui/react';
-import { DetailModal } from '../components/DetailModal';
-import { useMutation } from '@tanstack/react-query';
-import { applyToJob, withdrawFromJob } from '../services/jobService';
+import { Box, Text, Button, Tag, HStack, useToast } from "@chakra-ui/react";
+import { TfiBag } from "react-icons/tfi";
+import { useDisclosure } from "@chakra-ui/react";
+import { DetailModal } from "../components/DetailModal";
+import { useMutation } from "@tanstack/react-query";
+import { applyToJob, withdrawFromJob } from "../services/jobService";
 
 export const JobCard = ({ job }: { job: any }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -13,22 +13,22 @@ export const JobCard = ({ job }: { job: any }) => {
     mutationFn: applyToJob,
     onSuccess: () => {
       toast({
-        title: 'Application Successful',
+        title: "Application Successful",
         description: `You have successfully applied to job: ${job.name}.`,
-        status: 'success',
+        status: "success",
         duration: 5000,
         isClosable: true,
-        position: 'top',
+        position: "top",
       });
     },
     onError: (error) => {
       toast({
-        title: 'Application Failed',
+        title: "Application Failed",
         description: `Could not apply to job: ${job.name}. Please try again.`,
-        status: 'error',
+        status: "error",
         duration: 5000,
         isClosable: true,
-        position: 'top',
+        position: "top",
       });
     },
   });
@@ -37,22 +37,22 @@ export const JobCard = ({ job }: { job: any }) => {
     mutationFn: withdrawFromJob,
     onSuccess: () => {
       toast({
-        title: 'Withdraw Successful',
+        title: "Withdraw Successful",
         description: `You have successfully withdrawn from job: ${job.name}.`,
-        status: 'success',
+        status: "success",
         duration: 5000,
         isClosable: true,
-        position: 'top',
+        position: "top",
       });
     },
     onError: (error) => {
       toast({
-        title: 'Withdraw Failed',
+        title: "Withdraw Failed",
         description: `Could not withdraw from job: ${job.name}. Please try again.`,
-        status: 'error',
+        status: "error",
         duration: 5000,
         isClosable: true,
-        position: 'top',
+        position: "top",
       });
     },
   });
@@ -66,7 +66,14 @@ export const JobCard = ({ job }: { job: any }) => {
   };
 
   return (
-    <Box className="flex flex-col lg:flex-row border rounded-lg p-6 shadow-md gap-6">
+    <Box
+      _hover={{
+        boxShadow: "lg",
+        transform: "scale(1.02)",
+        transition: "all 0.3s ease-in-out",
+      }}
+      className="flex flex-col lg:flex-row border rounded-lg p-6 shadow-md gap-6"
+    >
       <Box className="flex flex-col lg:flex-shrink-0">
         <TfiBag size={36} />
       </Box>
@@ -77,24 +84,48 @@ export const JobCard = ({ job }: { job: any }) => {
           </Text>
         </Box>
         <Text className="text-gray-600 mt-2">{job.description}</Text>
-        <Text className="text-sm text-gray-500 mt-2">Location: {job.location}</Text>
+        <Text className="text-sm text-gray-500 mt-2">
+          Location: {job.location}
+        </Text>
         <Text className="text-sm text-gray-500">Salary: {job.salary}$</Text>
         <HStack spacing={2} className="mt-2">
           {job.keywords?.map((tag: string, index: number) => (
-            <Tag key={index} colorScheme="blue">
+            <Tag
+              key={index}
+              colorScheme="teal"
+              borderRadius="full"
+              _hover={{
+                bg: "teal.500",
+                color: "white",
+              }}
+            >
               {tag}
             </Tag>
           ))}
         </HStack>
       </Box>
       <Box className="flex flex-col lg:items-end lg:flex-shrink-0 gap-2">
-        <Button colorScheme="blue" size="sm" w="full" onClick={onOpen}>
+        <Button
+          colorScheme="blue"
+          _hover={{
+            bg: "blue.600",
+            transform: "scale(1.05)",
+            boxShadow: "lg",
+          }}
+          size="sm"
+          w="full"
+          onClick={onOpen}
+        >
           Detail
         </Button>
         <Button
           colorScheme="red"
           size="sm"
           variant="outline"
+          _hover={{
+            bg: "red.100",
+            borderColor: "red.600",
+          }}
           w="full"
           onClick={() => handleWithdraw(job.id)}
         >
@@ -102,7 +133,12 @@ export const JobCard = ({ job }: { job: any }) => {
         </Button>
       </Box>
 
-      <DetailModal isOpen={isOpen} onClose={onClose} job={job} onApply={handleApply} />
+      <DetailModal
+        isOpen={isOpen}
+        onClose={onClose}
+        job={job}
+        onApply={handleApply}
+      />
     </Box>
   );
 };

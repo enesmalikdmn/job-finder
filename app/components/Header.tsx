@@ -25,7 +25,7 @@ const Header = ({ short }: { short?: boolean }) => {
   return (
     <Flex 
       as="header" 
-      bg="gray.200"
+      bg="gray.100" 
       color="black" 
       p={short ? 2 : 4} 
       align="center" 
@@ -45,7 +45,7 @@ const Header = ({ short }: { short?: boolean }) => {
                 </Button>
               </div>
               <div className='flex items-center gap-3'>
-                <p className="font-bold text-gray-500">{user.email}</p>
+                <p className="font-bold">{user.email}</p>
                 <div className="w-12 h-12 rounded-full bg-gray-400">
                   <img
                     src={user.profileImage || '/default-profile.png'} 

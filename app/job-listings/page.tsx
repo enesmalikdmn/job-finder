@@ -121,6 +121,9 @@ const JobListings = () => {
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             isDisabled={currentPage === 1}
             colorScheme="blue"
+            variant="outline"
+            _hover={{ bg: "blue.100" }}
+        
           >
             Previous Page
           </Button>
@@ -148,6 +151,8 @@ const JobListings = () => {
             onClick={() => setCurrentPage((prev) => prev + 1)}
             isDisabled={currentPage === totalPages}
             colorScheme="blue"
+            variant="solid"
+            _hover={{ bg: "blue.600" }}
           >
             Next Page
           </Button>

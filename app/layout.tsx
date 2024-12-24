@@ -8,6 +8,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import { usePathname } from 'next/navigation';
 import { Sidebar } from './components/Sidebar';
+import theme from '../theme';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -16,7 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <ReactQueryProvider>
             <Box minH="100vh" display="flex" flexDirection="column">
               {isJobListings ? (
@@ -29,7 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     <Box flex="1" p={4}>{children}</Box>
                   </Box>
                   {/* Sidebar */}
-                  <Box w="33.33%" h="100vh" bg="gray.100" p={4} position="sticky" top="0">
+                  <Box w="33.33%" h="100vh" border="1px" borderColor="gray.200"  p={4} position="sticky" top="0">
                     <Sidebar />
                   </Box>
                 </Flex>

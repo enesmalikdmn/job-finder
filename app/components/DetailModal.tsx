@@ -55,7 +55,15 @@ export const DetailModal = ({
               <Text fontWeight="bold">Keywords:</Text>
               <HStack spacing={2}>
                 {job.keywords?.map((tag: string, index: number) => (
-                  <Tag key={index} colorScheme="blue">
+                  <Tag
+                    key={index}
+                    colorScheme="teal"
+                    borderRadius="full"
+                    _hover={{
+                      bg: "teal.500",
+                      color: "white",
+                    }}
+                  >
                     {tag}
                   </Tag>
                 ))}

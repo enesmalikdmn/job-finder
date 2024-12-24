@@ -1,5 +1,6 @@
 import { useJobStore } from '../../store/useJobStore';
 import { useUserStore } from '../../store/useAuthStore';
+import { Text } from '@chakra-ui/react';
 
 export const Sidebar = () => {
   const { jobs } = useJobStore();
@@ -18,18 +19,18 @@ export const Sidebar = () => {
           />
         </div>
         <div className="flex flex-col justify-center">
-          <p className="font-bold text-gray-500">{user.email}</p>
-          <p className="text-sm flex justify-center font-bold mt-4">Applied Jobs</p>
+          <Text className="font-bold" color='gray.700'>{user.email}</Text>
+          <Text className="text-sm flex justify-center font-bold mt-4" color="gray.500">Applied Jobs</Text>
         </div>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 max-h-[800px] overflow-y-auto">
         {jobs.length === 0 ? (
-          <p className="text-center text-sm text-gray-500">No jobs applied yet</p>
+          <p className="text-center text-sm text-gray-500">No jobs applied yet.</p>
         ) : (
           jobs.map((job) => (
             <div
               key={job.id}
-              className="flex flex-col gap-2 border rounded-lg p-2 bg-white shadow-sm text-sm"
+              className="flex bg-[#F3FBF8] flex-col gap-2 border rounded-lg p-2 shadow-sm text-sm"
             >
               <p className="flex justify-center font-bold">{job.name}</p>
               <p><span className="font-bold">Company Name:</span> {job.companyName}</p>
