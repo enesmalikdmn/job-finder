@@ -8,13 +8,13 @@ export const Sidebar = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-center flex-col items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-gray-400">
+        <div className="w-[72px] h-[72px] rounded-full bg-gray-400">
           <img
             src={user.profileImage || '/default-profile.png'} 
             alt="Profile"
             className="w-full h-full rounded-full"
-            width={48} 
-            height={48} 
+            width={72} 
+            height={72} 
           />
         </div>
         <div className="flex flex-col justify-center">
