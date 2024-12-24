@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { useJobStore } from '../../store/useJobStore';
 
 const API_URL = process.env.NEXT_PUBLIC_JOB_API_BASE_URL;
 
-// Axios instance oluşturma ve interceptors ile token ekleme
+// Axios instance oluşturma
 const axiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
@@ -10,7 +11,7 @@ const axiosInstance = axios.create({
   },
 });
 
-// Request Interceptor: Authorization token ekler
+// Authorization token ekleme
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
   if (token) {
@@ -19,7 +20,7 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-// Response Interceptor: Hata loglama
+// Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -28,12 +29,7 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-/**
- * Jobs listesini almak için API çağrısı.
- *
- * @param {Object} options API parametreleri (page, perPage, orderBy, search)
- * @returns {Promise} API'den dönen job listesi
- */
+// İş listesi API çağrısı
 export const getJobs = async ({
   page = 1,
   perPage = 20,
@@ -45,10 +41,7 @@ export const getJobs = async ({
   orderBy?: { field?: string; direction?: 'asc' | 'desc' };
   search?: { field?: string; query?: string };
 }) => {
-  const params: Record<string, string | number> = {
-    page,
-    perPage,
-  };
+  const params: Record<string, string | number> = { page, perPage };
 
   if (orderBy.field && orderBy.direction) {
     params[`orderBy[field]`] = orderBy.field;
@@ -64,24 +57,26 @@ export const getJobs = async ({
   return response.data;
 };
 
-/**
- * İşe başvurmak için API çağrısı.
- *
- * @param {string} jobId Başvurulacak işin ID'si
- * @returns {Promise} API yanıtı
- */
+// İş başvurusu yap
 export const applyToJob = async (jobId: string) => {
   const response = await axiosInstance.post(`/jobs/${jobId}/apply`);
+  const jobResponse = await axiosInstance.get(`/jobs/${jobId}`); // İş detaylarını al
+  const job = jobResponse.data;
+
+  // Store'a ekle
+  const { addJob } = useJobStore.getState();
+  addJob(job);
+
   return response.data;
 };
 
-
+// İş başvurusunu geri çek
 export const withdrawFromJob = async (jobId: string) => {
-  try {
-    const response = await axiosInstance.post(`/jobs/${jobId}/withdraw`);
-    return response.data;
-  } catch (error: any) {
-    console.error('Error withdrawing from job:', error.response?.data || error.message);
-    throw error;
-  }
+  const response = await axiosInstance.post(`/jobs/${jobId}/withdraw`);
+
+  // Store'dan kaldır
+  const { removeJob } = useJobStore.getState();
+  removeJob(jobId);
+
+  return response.data;
 };
