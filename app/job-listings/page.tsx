@@ -88,6 +88,7 @@ const JobListings = () => {
           />
         </Flex>
 
+
         {isLoading ? (
           <Flex justify="center" align="center" height="300px">
             <Spinner size="lg" />
@@ -110,6 +111,7 @@ const JobListings = () => {
           </Box>
         )}
 
+        {/* Sayfa Kontrolleri */}
         <Flex
           justifyContent="space-between"
           alignItems="center"

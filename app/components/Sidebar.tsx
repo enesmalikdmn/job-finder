@@ -7,7 +7,7 @@ export const Sidebar = () => {
   const { user } = useUserStore();
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-8 lg:mt-8">
       <div className="flex justify-center flex-col items-center gap-3">
         <div className="w-[72px] h-[72px] rounded-full bg-gray-400">
           <img
