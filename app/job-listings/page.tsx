@@ -21,8 +21,7 @@ const JobListings = () => {
   const [field, setField] = useState("companyName");
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const jobsPerPage = 20;
+  const [jobsPerPage, setJobsPerPage] = useState(20);  // Default value set to 20
 
   const fetchJobs = async () => {
     setIsLoading(true);
@@ -43,7 +42,7 @@ const JobListings = () => {
   };
 
   const { data } = useQuery({
-    queryKey: ["jobs", currentPage, search],
+    queryKey: ["jobs", currentPage, search, jobsPerPage], // Include jobsPerPage in the query key
     queryFn: fetchJobs,
     staleTime: 5000,
   });
@@ -78,19 +77,18 @@ const JobListings = () => {
           />
         </Box>
 
-        {/* Loading Check */}
         {isLoading ? (
           <Box
-          display="flex"
-          justifyContent="center"
-          overflowY="auto"
-          border="1px solid"
-          borderColor="gray.200"
-          borderRadius="md"
-          p="4"
-        >
-          <Spinner size="lg" />
-        </Box>
+            display="flex"
+            justifyContent="center"
+            overflowY="auto"
+            border="1px solid"
+            borderColor="gray.200"
+            borderRadius="md"
+            p="4"
+          >
+            <Spinner size="lg" />
+          </Box>
         ) : (
           <Box
             className="space-y-4"
@@ -108,55 +106,65 @@ const JobListings = () => {
             )}
           </Box>
         )}
-
-        {/* Pagination */}
-        <Flex
-          justifyContent="center"
-          alignItems="center"
-          gap={4}
-          mt={6}
-          direction={{ base: "column", sm: "row" }}
+        <div className="flex items-center mt-4 w-full"
         >
-          <Button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            isDisabled={currentPage === 1}
-            colorScheme="blue"
-            variant="outline"
-            _hover={{ bg: "blue.100" }}
-        
+          <Flex
+            className="flex w-full"
+            justifyContent="center"
+            alignItems="center"
+            gap={4}
+            direction={{ base: "column", sm: "row" }}
           >
-            Previous Page
-          </Button>
+            <Button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              isDisabled={currentPage === 1}
+              colorScheme="blue"
+              variant="outline"
+              _hover={{ bg: "blue.100" }}
+            >
+              Previous Page
+            </Button>
 
-          <Flex alignItems="center" gap={2}>
-            <InputGroup size="sm">
-              <Input
-                type="number"
-                value={currentPage}
-                onChange={(event) => {
-                  const value = parseInt(event.target.value, 10);
-                  if (!isNaN(value)) setCurrentPage(value);
-                }}
-                max={totalPages}
-                min={1}
-                width="75px"
-              />
-              <InputRightElement pointerEvents="none">
-                / {totalPages}
-              </InputRightElement>
-            </InputGroup>
+            <Flex alignItems="center" gap={2}>
+              <InputGroup size="sm">
+                <Input
+                  type="number"
+                  value={currentPage}
+                  onChange={(event) => {
+                    const value = parseInt(event.target.value, 10);
+                    if (!isNaN(value)) setCurrentPage(value);
+                  }}
+                  max={totalPages}
+                  min={1}
+                  width="75px"
+                />
+                <InputRightElement pointerEvents="none">
+                  / {totalPages}
+                </InputRightElement>
+              </InputGroup>
+            </Flex>
+
+            <Button
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              isDisabled={currentPage === totalPages}
+              colorScheme="blue"
+              variant="solid"
+              _hover={{ bg: "blue.600" }}
+            >
+              Next Page
+            </Button>
+
           </Flex>
-
-          <Button
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            isDisabled={currentPage === totalPages}
-            colorScheme="blue"
-            variant="solid"
-            _hover={{ bg: "blue.600" }}
-          >
-            Next Page
-          </Button>
-        </Flex>
+            <Select
+              value={jobsPerPage}
+              onChange={(e) => setJobsPerPage(Number(e.target.value))}
+              width="5rem"
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </Select>
+        </div>
       </Box>
     </Box>
   );
