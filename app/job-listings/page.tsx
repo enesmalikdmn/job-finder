@@ -21,7 +21,7 @@ const JobListings = () => {
   const [field, setField] = useState("companyName");
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [jobsPerPage, setJobsPerPage] = useState(20);
+  const [jobsPerPage, setJobsPerPage] = useState(20);  // Default value set to 20
 
   const fetchJobs = async () => {
     setIsLoading(true);
@@ -35,14 +35,14 @@ const JobListings = () => {
       return data;
     } catch (error) {
       console.error("Error fetching jobs:", error);
-      return { data: [], meta: { total: 0 } };
+      return { data: [], meta: { total: 0 } }; // Return empty data on error
     } finally {
       setIsLoading(false);
     }
   };
 
   const { data } = useQuery({
-    queryKey: ["jobs", currentPage, search, jobsPerPage],
+    queryKey: ["jobs", currentPage, search, jobsPerPage], // Include jobsPerPage in the query key
     queryFn: fetchJobs,
     staleTime: 5000,
   });
@@ -52,28 +52,17 @@ const JobListings = () => {
   const totalPages = Math.ceil(totalJobs / jobsPerPage);
 
   return (
-    <Box
-      display="flex"
-      flexDirection={{ base: "column", lg: "row" }}
-      height="100vh"
-      width="100%"
-    >
-      <Box flex="1" p={{ base: 2, sm: 4 }}>
-        <Flex
-          direction={{ base: "column", sm: "row" }}
-          gap={4}
-          align={{ base: "flex-start", sm: "center" }}
-          mb={4}
-        >
-          <Text fontSize="lg" minWidth="8rem">
+    <Box className="flex flex-col h-full lg:flex-row w-full">
+      <Box className="flex-1 p-4">
+        <Box className="mb-4 flex items-center gap-4">
+          <Text fontSize="lg" w="10rem">
             Basic Filter
           </Text>
           <Select
             placeholder="Select a Field"
+            width="20rem"
             value={field}
             onChange={(e) => setField(e.target.value)}
-            flex={{ base: "1", sm: "none" }}
-            maxWidth="300px"
           >
             <option value="companyName">Company Name</option>
             <option value="name">Job Name</option>
@@ -81,27 +70,34 @@ const JobListings = () => {
           </Select>
           <Input
             placeholder="Search"
+            className="w-full lg:w-1/2"
             borderColor="gray.300"
             _focus={{ borderColor: "blue.500", boxShadow: "outline" }}
             onKeyDown={(e) => e.key === "Enter" && setSearch(e.target.value)}
-            flex="1"
           />
-        </Flex>
-
+        </Box>
 
         {isLoading ? (
-          <Flex justify="center" align="center" height="300px">
+          <Box
+            display="flex"
+            justifyContent="center"
+            overflowY="auto"
+            border="1px solid"
+            borderColor="gray.200"
+            borderRadius="md"
+            p="4"
+          >
             <Spinner size="lg" />
-          </Flex>
+          </Box>
         ) : (
           <Box
+            className="space-y-4"
             overflowY="auto"
             maxHeight="calc(100vh - 300px)"
             border="1px solid"
             borderColor="gray.200"
             borderRadius="md"
-            p={4}
-            className="space-y-4"
+            p="4"
           >
             {jobs.length === 0 ? (
               <Text>No jobs found. Try adjusting your search or filters.</Text>
@@ -110,62 +106,65 @@ const JobListings = () => {
             )}
           </Box>
         )}
-
-        {/* Sayfa Kontrolleri */}
-        <Flex
-          justifyContent="space-between"
-          alignItems="center"
-          mt={4}
-          direction={{ base: "column", sm: "row" }}
-          gap={4}
+        <div className="flex items-center mt-4 w-full"
         >
-          <Button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            isDisabled={currentPage === 1}
-            colorScheme="blue"
-            variant="outline"
+          <Flex
+            className="flex w-full"
+            justifyContent="center"
+            alignItems="center"
+            gap={4}
+            direction={{ base: "column", sm: "row" }}
           >
-            Previous Page
-          </Button>
+            <Button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              isDisabled={currentPage === 1}
+              colorScheme="blue"
+              variant="outline"
+              _hover={{ bg: "blue.100" }}
+            >
+              Previous Page
+            </Button>
 
-          <Flex alignItems="center" gap={2}>
-            <InputGroup size="sm">
-              <Input
-                type="number"
-                value={currentPage}
-                onChange={(event) => {
-                  const value = parseInt(event.target.value, 10);
-                  if (!isNaN(value)) setCurrentPage(value);
-                }}
-                max={totalPages}
-                min={1}
-                width="75px"
-              />
-              <InputRightElement pointerEvents="none">
-                / {totalPages}
-              </InputRightElement>
-            </InputGroup>
+            <Flex alignItems="center" gap={2}>
+              <InputGroup size="sm">
+                <Input
+                  type="number"
+                  value={currentPage}
+                  onChange={(event) => {
+                    const value = parseInt(event.target.value, 10);
+                    if (!isNaN(value)) setCurrentPage(value);
+                  }}
+                  max={totalPages}
+                  min={1}
+                  width="75px"
+                />
+                <InputRightElement pointerEvents="none">
+                  / {totalPages}
+                </InputRightElement>
+              </InputGroup>
+            </Flex>
+
+            <Button
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              isDisabled={currentPage === totalPages}
+              colorScheme="blue"
+              variant="solid"
+              _hover={{ bg: "blue.600" }}
+            >
+              Next Page
+            </Button>
+
           </Flex>
-
-          <Button
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            isDisabled={currentPage === totalPages}
-            colorScheme="blue"
-            variant="solid"
-          >
-            Next Page
-          </Button>
-
-          <Select
-            value={jobsPerPage}
-            onChange={(e) => setJobsPerPage(Number(e.target.value))}
-            maxWidth="100px"
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-          </Select>
-        </Flex>
+            <Select
+              value={jobsPerPage}
+              onChange={(e) => setJobsPerPage(Number(e.target.value))}
+              width="6rem"
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </Select>
+        </div>
       </Box>
     </Box>
   );
