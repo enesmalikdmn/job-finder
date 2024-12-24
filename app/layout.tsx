@@ -22,15 +22,32 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <Box minH="100vh" display="flex" flexDirection="column">
               {isJobListings ? (
                 // Job Listings özel layout
-                <Flex direction="row" flex="1">
-
+                <Flex
+                  direction={{ base: 'column', lg: 'row' }} // Mobilde dikey, büyük ekranda yatay düzen
+                  flex="1"
+                >
                   {/* Main Content */}
-                  <Box w="66.67%" display="flex" flexDirection="column" flex="1">
+                  <Box
+                    w={{ base: '100%', lg: '66.67%' }}
+                    display="flex"
+                    flexDirection="column"
+                    flex="1"
+                  >
                     <Header />
-                    <Box flex="1" p={4}>{children}</Box>
+                    <Box flex="1" p={4}>
+                      {children}
+                    </Box>
                   </Box>
                   {/* Sidebar */}
-                  <Box w="33.33%" h="100vh" border="1px" borderColor="gray.200"  p={4} position="sticky" top="0">
+                  <Box
+                    w={{ base: '100%', lg: '33.33%' }}
+                    h={{ base: 'auto', lg: '100vh' }}
+                    border={{ base: 'none', lg: '1px' }}
+                    borderColor="gray.200"
+                    p={4}
+                    position={{ base: 'static', lg: 'sticky' }} // Mobilde statik, büyük ekranda sabit
+                    top="0"
+                  >
                     <Sidebar />
                   </Box>
                 </Flex>
