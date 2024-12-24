@@ -56,12 +56,12 @@ const JobListings = () => {
     <Box className="flex flex-col h-full lg:flex-row w-full">
       <Box className="flex-1 p-4">
         <Box className="mb-4 flex items-center gap-4">
-          <Text fontSize="lg" className="font-bold">
+          <Text fontSize="lg" w="10rem">
             Basic Filter
           </Text>
           <Select
             placeholder="Select a Field"
-            width="350px"
+            width="20rem"
             value={field}
             onChange={(e) => setField(e.target.value)}
           >
