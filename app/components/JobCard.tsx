@@ -9,7 +9,7 @@ import { Job } from "../../types/jobTypes";
 
 
 
-export const JobCard = ({ job }: { job: Job }) => {
+const JobCard = ({ job }: { job: Job }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const { jobs } = useJobStore();
@@ -157,3 +157,5 @@ export const JobCard = ({ job }: { job: Job }) => {
     </Box>
   );
 };
+
+export default JobCard;
