@@ -2,13 +2,12 @@
 
 import './globals.css';
 import { ReactNode } from 'react';
-import { ChakraProvider, Box, Flex } from '@chakra-ui/react';
+import { ChakraProvider, Box } from '@chakra-ui/react';
 import ReactQueryProvider from './ReactQueryProvider';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import { usePathname } from 'next/navigation';
-import { Sidebar } from './components/Sidebar';
+import JobListingsLayout from './layouts/JobListingsLayout';
+import DefaultLayout from './layouts/DefaultLayout';
 import theme from '../theme';
+import { usePathname } from 'next/navigation';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -21,45 +20,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <ReactQueryProvider>
             <Box minH="100vh" display="flex" flexDirection="column">
               {isJobListings ? (
-                // Job Listings özel layout
-                <Flex
-                  direction={{ base: 'column', lg: 'row' }} // Mobilde dikey, büyük ekranda yatay düzen
-                  flex="1"
-                >
-                  {/* Main Content */}
-                  <Box
-                    w={{ base: '100%', lg: '66.67%' }}
-                    display="flex"
-                    flexDirection="column"
-                    flex="1"
-                  >
-                    <Header />
-                    <Box flex="1" p={4}>
-                      {children}
-                    </Box>
-                  </Box>
-                  {/* Sidebar */}
-                  <Box
-                    w={{ base: '100%', lg: '33.33%' }}
-                    h={{ base: 'auto', lg: '100vh' }}
-                    border={{ base: 'none', lg: '1px' }}
-                    borderColor="gray.200"
-                    p={4}
-                    position={{ base: 'static', lg: 'sticky' }} // Mobilde statik, büyük ekranda sabit
-                    top="0"
-                  >
-                    <Sidebar />
-                  </Box>
-                </Flex>
+                <JobListingsLayout>{children}</JobListingsLayout>
               ) : (
-                // Diğer sayfalar için varsayılan layout
-                <>
-                  <Header />
-                  <Box as="main" flex="1">
-                    {children}
-                  </Box>
-                  <Footer />
-                </>
+                <DefaultLayout>{children}</DefaultLayout>
               )}
             </Box>
           </ReactQueryProvider>

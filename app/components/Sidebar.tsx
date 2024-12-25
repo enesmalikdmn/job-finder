@@ -2,7 +2,7 @@ import { useJobStore } from '../../store/useJobStore';
 import { useUserStore } from '../../store/useAuthStore';
 import { Text } from '@chakra-ui/react';
 
-export const Sidebar = () => {
+const Sidebar = () => {
   const { jobs } = useJobStore();
   const { user } = useUserStore();
   
@@ -42,3 +42,5 @@ export const Sidebar = () => {
     </div>
   );
 };
+
+export default Sidebar;
