@@ -9,6 +9,7 @@ const Footer = () => {
       bg="gray.100" 
       color="black" 
       p={8} 
+      h="33vh" 
       textAlign="center" 
       className="flex flex-col justify-between"
     >
@@ -22,11 +23,13 @@ const Footer = () => {
           className="w-full lg:w-1/2 pr-4" 
           mb={{ base: 6, lg: 0 }} // Mobilde alt boşluk ekleyip büyük ekranlarda kaldırıyoruz
         >
-          <Flex direction="column">
-            <Text className="text-lg font-bold mb-2">Job Finder</Text>
-            <Box className="w-full ml-4 text-left">
-              <Text className="text-md font-semibold">Ready to get started?</Text>
-              <Text className="mt-2 text-sm">
+          <Flex>
+            <Text className="text-lg font-bold mb-2" w="25%">Job Finder</Text>
+            <Box w="75%" ml={4} textAlign="left">
+              <Text fontSize="md" fontWeight="semibold">
+                Ready to get started?
+              </Text>
+              <Text mt={2} fontSize="sm">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
               </Text>
             </Box>
@@ -34,7 +37,7 @@ const Footer = () => {
         </Box>
 
         <Divider
-          orientation={{ base: 'horizontal', lg: 'vertical' }} // Mobilde yatay, büyük ekranda dikey
+          orientation='vertical'
           borderColor="gray.400"
           h={{ base: 'auto', lg: '75%' }}
           mx={4}

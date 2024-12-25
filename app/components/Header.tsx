@@ -84,7 +84,7 @@ const Header = ({ short }: { short?: boolean }) => {
                 variant="solid"
                 onClick={() => router.push('/register')}
               >
-                Register
+                Sign Up
               </Button>
             </Flex>
           )}
