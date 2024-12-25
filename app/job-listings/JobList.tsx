@@ -1,6 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 import { Job } from "../../types/jobTypes";
-import JobCard from "../components/JobCard";
+import JobCard from "./JobCard";
 
 interface JobListProps {
   jobs: Job[];

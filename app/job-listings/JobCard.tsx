@@ -1,7 +1,7 @@
 import { Box, Text, Button, Tag, Wrap, WrapItem, useToast } from "@chakra-ui/react";
 import { TfiBag } from "react-icons/tfi";
 import { useDisclosure } from "@chakra-ui/react";
-import { DetailModal } from "../components/DetailModal";
+import { DetailModal } from "../components/modals/DetailModal";
 import { useMutation } from "@tanstack/react-query";
 import { applyToJob, withdrawFromJob } from "../services/jobService";
 import { useJobStore } from "../../store/useJobStore";
