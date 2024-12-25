@@ -11,11 +11,21 @@ import PaginationControls from './PaginationControls';
 import { getJobs } from '../services/jobService';
 import { Job } from '../../types/jobTypes';
 
+interface JobResponse {
+  data: Job[];
+  meta: {
+    total: number;
+    page: number;
+    perPage: number;
+  };
+}
+
 const JobListings = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [field, setField] = useState("companyName");
-  const [search, setSearch] = useState("");
-  const [jobsPerPage, setJobsPerPage] = useState(20);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [field, setField] = useState<string>("companyName");
+  const [search, setSearch] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [jobsPerPage, setJobsPerPage] = useState<number>(20);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,7 +35,8 @@ const JobListings = () => {
     }
   }, [router]);
 
-  const fetchJobs = async (): Promise<{ data: Job[]; meta: { total: number; page: number; perPage: number } }> => {
+  const fetchJobs = async (): Promise<JobResponse> => {
+    setIsLoading(true);
     try {
       const data = await getJobs({
         page: currentPage,
@@ -36,11 +47,15 @@ const JobListings = () => {
     } catch (error) {
       console.error('Error fetching jobs:', error);
       return { data: [], meta: { total: 0, page: 0, perPage: 0 } };
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['jobs', currentPage, search, jobsPerPage],
+  const queryKey = ["jobs", currentPage, search, jobsPerPage];
+
+  const { data } = useQuery<JobResponse>({
+    queryKey,
     queryFn: fetchJobs,
     staleTime: 5000,
   });

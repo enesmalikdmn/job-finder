@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useUserStore } from '../../store/useAuthStore';
 
 const Header = ({ short }: { short?: boolean }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const router = useRouter();
   const { user } = useUserStore();
 
