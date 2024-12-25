@@ -14,6 +14,7 @@ import {
   Tag,
   Divider,
 } from "@chakra-ui/react";
+import { Job } from "../../types/jobTypes";
 
 export const DetailModal = ({
   isOpen,
@@ -23,7 +24,7 @@ export const DetailModal = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  job: any;
+  job: Job;
   onApply: (jobId: string) => void;
 }) => {
   const handleApply = () => {

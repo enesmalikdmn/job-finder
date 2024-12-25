@@ -1,12 +1,15 @@
-import { Box, Text, Button, Tag, HStack, Wrap, WrapItem, useToast } from "@chakra-ui/react";
+import { Box, Text, Button, Tag, Wrap, WrapItem, useToast } from "@chakra-ui/react";
 import { TfiBag } from "react-icons/tfi";
 import { useDisclosure } from "@chakra-ui/react";
 import { DetailModal } from "../components/DetailModal";
 import { useMutation } from "@tanstack/react-query";
 import { applyToJob, withdrawFromJob } from "../services/jobService";
 import { useJobStore } from "../../store/useJobStore";
+import { Job } from "../../types/jobTypes";
 
-export const JobCard = ({ job }: { job: any }) => {
+
+
+export const JobCard = ({ job }: { job: Job }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const { jobs } = useJobStore();

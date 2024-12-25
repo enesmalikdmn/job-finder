@@ -16,6 +16,8 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { useRouter } from 'next/navigation';
+import { Job } from "../../types/jobTypes";
+
 
 const JobListings = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,7 +34,7 @@ const JobListings = () => {
     }
   }, [router]);
 
-  const fetchJobs = async () => {
+  const fetchJobs = async (): Promise<{ data: Job[]; meta: { total: number, page: number, perPage: number } }> => {
     setIsLoading(true);
     try {
       const data = await getJobs({
@@ -45,7 +47,7 @@ const JobListings = () => {
       return data;
     } catch (error) {
       console.error("Error fetching jobs:", error);
-      return { data: [], meta: { total: 0 } }; // Return empty data on error
+      return { data: [], meta: { total: 0, page: 0, perPage: 0 } }; // Return empty data on error
     } finally {
       setIsLoading(false);
     }
@@ -58,6 +60,8 @@ const JobListings = () => {
   });
 
   const jobs = data?.data || [];
+  console.log(jobs);
+  
   const totalJobs = data?.meta?.total || 0;
   const totalPages = Math.ceil(totalJobs / jobsPerPage);
 
@@ -112,7 +116,7 @@ const JobListings = () => {
             {jobs.length === 0 ? (
               <Text>No jobs found. Try adjusting your search or filters.</Text>
             ) : (
-              jobs.map((job: any) => <JobCard key={job.id} job={job} />)
+              jobs.map((job: Job) => <JobCard key={job.id} job={job} />)
             )}
           </Box>
         )}
