@@ -10,8 +10,6 @@ const Header = ({ short }: { short?: boolean }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
   const { user } = useUserStore();
-  console.log(user);
-  
 
   // Token kontrolü
   useEffect(() => {

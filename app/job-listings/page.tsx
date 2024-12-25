@@ -18,13 +18,21 @@ import {
 import { useRouter } from 'next/navigation';
 import { Job } from "../../types/jobTypes";
 
+interface JobResponse {
+  data: Job[];
+  meta: {
+    total: number;
+    page: number;
+    perPage: number;
+  };
+}
 
 const JobListings = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [field, setField] = useState("companyName");
-  const [search, setSearch] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [jobsPerPage, setJobsPerPage] = useState(20);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [field, setField] = useState<"companyName" | "name" | "location">("companyName");
+  const [search, setSearch] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [jobsPerPage, setJobsPerPage] = useState<number>(20);
   const router = useRouter();
 
   useEffect(() => {
@@ -34,7 +42,7 @@ const JobListings = () => {
     }
   }, [router]);
 
-  const fetchJobs = async (): Promise<{ data: Job[]; meta: { total: number, page: number, perPage: number } }> => {
+  const fetchJobs = async (): Promise<JobResponse> => {
     setIsLoading(true);
     try {
       const data = await getJobs({
@@ -53,14 +61,15 @@ const JobListings = () => {
     }
   };
 
-  const { data } = useQuery({
-    queryKey: ["jobs", currentPage, search, jobsPerPage],
+  const queryKey = ["jobs", currentPage, search, jobsPerPage];
+
+  const { data } = useQuery<JobResponse>({
+    queryKey,
     queryFn: fetchJobs,
     staleTime: 5000,
   });
 
   const jobs = data?.data || [];
-  console.log(jobs);
   
   const totalJobs = data?.meta?.total || 0;
   const totalPages = Math.ceil(totalJobs / jobsPerPage);
