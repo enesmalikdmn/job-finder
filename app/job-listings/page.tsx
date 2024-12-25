@@ -22,7 +22,7 @@ const JobListings = () => {
   const [field, setField] = useState("companyName");
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [jobsPerPage, setJobsPerPage] = useState(20); // Default value set to 20
+  const [jobsPerPage, setJobsPerPage] = useState(20);
   const router = useRouter();
 
   useEffect(() => {
@@ -38,6 +38,7 @@ const JobListings = () => {
       const data = await getJobs({
         page: currentPage,
         perPage: jobsPerPage,
+        // orderBy sıralama yapmadığı için eklemedim.
         orderBy: {},
         search: search ? { field: field, query: search } : {},
       });
@@ -51,7 +52,7 @@ const JobListings = () => {
   };
 
   const { data } = useQuery({
-    queryKey: ["jobs", currentPage, search, jobsPerPage], // Include jobsPerPage in the query key
+    queryKey: ["jobs", currentPage, search, jobsPerPage],
     queryFn: fetchJobs,
     staleTime: 5000,
   });

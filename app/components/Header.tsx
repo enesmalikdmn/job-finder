@@ -53,17 +53,7 @@ const Header = ({ short }: { short?: boolean }) => {
         <Box display={{ base: 'none', md: 'flex' }} alignItems="center">
           {isLoggedIn ? (
             <Flex alignItems="center" gap={6}>
-              {/* <Button
-                colorScheme="blue"
-                variant="outline"
-                onClick={() => router.push('/job-listings')}
-              >
-                Job Listings
-              </Button>
-              <Button colorScheme="red" variant="outline" onClick={handleLogout}>
-                Logout
-              </Button> */}
-               <div className='flex items-center gap-4 font-bold'>
+               <div className='flex items-center gap-6 font-bold'>
                 <Text className='cursor-pointer underline text-[#3B82F6]' onClick={() => router.push('/job-listings')}>
                   Job Listings
                 </Text>
