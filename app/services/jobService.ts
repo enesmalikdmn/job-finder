@@ -48,7 +48,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     // Eğer 401 hatası alındıysa ve henüz yenileme yapılmadıysa
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;  // Yeniden deneyin
+      originalRequest._retry = true; // Yeniden deneyin
       try {
         const newToken = await refreshToken(); // Yeni token al
         originalRequest.headers['Authorization'] = `Bearer ${newToken}`; // Yeni token'ı başlığa ekle
@@ -73,40 +73,55 @@ export const getJobs = async ({
   orderBy?: { field?: string; direction?: 'asc' | 'desc' };
   search?: { field?: string; query?: string };
 }) => {
-  const params: Record<string, string | number> = { page, perPage };
+  try {
+    const params: Record<string, string | number> = { page, perPage };
 
-  if (orderBy.field && orderBy.direction) {
-    params[`orderBy[field]`] = orderBy.field;
-    params[`orderBy[direction]`] = orderBy.direction;
+    if (orderBy.field && orderBy.direction) {
+      params[`orderBy[field]`] = orderBy.field;
+      params[`orderBy[direction]`] = orderBy.direction;
+    }
+
+    if (search.field && search.query) {
+      params[`search[field]`] = search.field;
+      params[`search[query]`] = search.query;
+    }
+
+    const response = await axiosInstance.get('/jobs', { params });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
   }
-
-  if (search.field && search.query) {
-    params[`search[field]`] = search.field;
-    params[`search[query]`] = search.query;
-  }
-
-  const response = await axiosInstance.get('/jobs', { params });
-  return response.data;
 };
 
 export const applyToJob = async (jobId: string) => {
-  const response = await axiosInstance.post(`/jobs/${jobId}/apply`);
-  const jobResponse = await axiosInstance.get(`/jobs/${jobId}`); // İş detaylarını al
-  const job = jobResponse.data;
+  try {
+    const response = await axiosInstance.post(`/jobs/${jobId}/apply`);
+    const jobResponse = await axiosInstance.get(`/jobs/${jobId}`); // İş detaylarını al
+    const job = jobResponse.data;
 
-  // Store'a ekle
-  const { addJob } = useJobStore.getState();
-  addJob(job);
+    // Store'a ekle
+    const { addJob } = useJobStore.getState();
+    addJob(job);
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error('Error applying to job:', error);
+    throw error;
+  }
 };
 
 export const withdrawFromJob = async (jobId: string) => {
-  const response = await axiosInstance.post(`/jobs/${jobId}/withdraw`);
+  try {
+    const response = await axiosInstance.post(`/jobs/${jobId}/withdraw`);
 
-  // Store'dan kaldır
-  const { removeJob } = useJobStore.getState();
-  removeJob(jobId);
+    // Store'dan kaldır
+    const { removeJob } = useJobStore.getState();
+    removeJob(jobId);
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error('Error withdrawing from job:', error);
+    throw error;
+  }
 };
