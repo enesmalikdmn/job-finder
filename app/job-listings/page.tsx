@@ -105,6 +105,7 @@ const JobListings = () => {
           setField={setField}
           setSearch={(value) => {
             setSearch(value);
+            setCurrentPage(1); // Arama yapıldığında sayfa numarasını 1 yap
             updateQueryParams(value, field); // URL'yi güncelle (sayfa 1'e sıfırlanır)
           }}
         />
