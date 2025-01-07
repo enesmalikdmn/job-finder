@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '../../store/useAuthStore';
 
-const Header = ({ short }: { short?: boolean }) => {
+const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const router = useRouter();
   const { user } = useUserStore();
@@ -31,7 +31,7 @@ const Header = ({ short }: { short?: boolean }) => {
       as="header"
       bg="gray.100"
       color="black"
-      p={short ? 2 : 4}
+      p={4}
       align="center"
       justify="space-between"
       position="sticky"
@@ -42,14 +42,14 @@ const Header = ({ short }: { short?: boolean }) => {
       {/* Logo */}
       <Heading
         className="cursor-pointer"
-        size={short ? 'md' : 'lg'}
+        size={'lg'}
         onClick={() => router.push('/')}
       >
         Job Finder
       </Heading>
 
       {/* Menü */}
-      {!short && (
+      {(
         <Box display={{ base: 'none', md: 'flex' }} alignItems="center">
           {isLoggedIn ? (
             <Flex alignItems="center" gap={6}>
@@ -92,7 +92,7 @@ const Header = ({ short }: { short?: boolean }) => {
       )}
 
       {/* Mobil Menü */}
-      {!short && (
+      {(
         <Box display={{ base: 'flex', md: 'none' }}>
           <Menu>
             <MenuButton

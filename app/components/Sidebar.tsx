@@ -23,7 +23,7 @@ const Sidebar = () => {
           <Text className="text-sm flex justify-center font-bold mt-4" color="gray.500">Applied Jobs</Text>
         </div>
       </div>
-      <div className="flex flex-col gap-3 max-h-[800px] overflow-y-auto">
+      <div className="flex flex-col gap-3 max-h-[720px] overflow-y-auto">
         {jobs.length === 0 ? (
           <p className="text-center text-sm text-gray-500">No jobs applied yet.</p>
         ) : (

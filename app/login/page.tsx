@@ -17,6 +17,7 @@ import { loginSchema } from "./validation"; // Schema dosyasını import ediyoru
 import { loginUser } from "../services/authService"; // authService'den loginUser fonksiyonunu import ediyoruz
 
 const Login = () => {
+  // state değiştiğinde React bileşeni yeniden render eder (const errorMessage olsa bu gerçekleşmez).
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 

@@ -26,7 +26,6 @@ const JobFilters: React.FC<JobFiltersProps> = ({ field, setField, setSearch }) =
         placeholder="Search"
         className="w-full lg:w-1/2"
         borderColor="gray.300"
-        _focus={{ borderColor: 'blue.500', boxShadow: 'outline' }}
         onKeyDown={(e) => e.key === 'Enter' && setSearch(e.currentTarget.value)}
       />
     </Box>

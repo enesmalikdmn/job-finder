@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Spinner } from '@chakra-ui/react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // Next.js 13 API'si
+import { useSearchParams, usePathname } from 'next/navigation'; // Next.js 13 API'si
 import JobFilters from './JobFilters';
 import JobList from './JobList';
 import PaginationControls from './PaginationControls';
@@ -22,19 +23,38 @@ interface JobResponse {
 
 const JobListings = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [field, setField] = useState<string>("companyName");
-  const [search, setSearch] = useState<string>("");
+  const [field, setField] = useState<string>('companyName');
+  const [search, setSearch] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [jobsPerPage, setJobsPerPage] = useState<number>(20);
   const router = useRouter();
+  const searchParams = useSearchParams();  // Query parametrelerini almak için kullanıyoruz
+  const pathname = usePathname(); // Sayfa yolunu almak için kullanıyoruz
 
+  // URL query parametrelerini okuma
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
+    if (!searchParams) return; // searchParams null olma durumunu kontrol et
+
+    const querySearch = searchParams.get('search');
+    const queryField = searchParams.get('field');
+
+    if (querySearch) {
+      setSearch(querySearch);
+    }
+    if (queryField) {
+      setField(queryField);
+    }
+  }, [searchParams]);
+
+  // Token kontrolü
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
-      router.push("/login");
+      router.push('/login');
     }
   }, [router]);
 
+  // Jobs veri çekme fonksiyonu
   const fetchJobs = async (): Promise<JobResponse> => {
     setIsLoading(true);
     try {
@@ -52,17 +72,30 @@ const JobListings = () => {
     }
   };
 
-  const queryKey = ["jobs", currentPage, search, jobsPerPage];
+  // Query parametreleriyle sorgu oluşturuluyor
+  const queryKey = ['jobs', currentPage, search, jobsPerPage];
 
   const { data } = useQuery<JobResponse>({
     queryKey,
     queryFn: fetchJobs,
     staleTime: 5000,
+    refetchOnWindowFocus: false,
   });
 
   const jobs = data?.data || [];
   const totalJobs = data?.meta?.total || 0;
   const totalPages = Math.ceil(totalJobs / jobsPerPage);
+
+  // URL'yi filtrelerle güncelleme
+  const updateQueryParams = (newSearch: string, newField: string) => {
+    // searchParams.entries() ile mevcut query parametrelerini alıyoruz
+    const updatedParams = new URLSearchParams(searchParams as any); // searchParams'ı URLSearchParams'e çeviriyoruz
+    updatedParams.set('search', newSearch);
+    updatedParams.set('field', newField);
+
+    // URL'yi güncelliyoruz
+    router.push(`${pathname}?${updatedParams.toString()}`, undefined, { shallow: true });
+  };
 
   return (
     <Box className="flex flex-col h-full lg:flex-row w-full">
@@ -70,7 +103,10 @@ const JobListings = () => {
         <JobFilters
           field={field}
           setField={setField}
-          setSearch={setSearch}
+          setSearch={(value) => {
+            setSearch(value);
+            updateQueryParams(value, field); // URL'yi güncelle (sayfa 1'e sıfırlanır)
+          }}
         />
         {isLoading ? (
           <Spinner size="lg" />
@@ -80,7 +116,10 @@ const JobListings = () => {
         <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
-          setCurrentPage={setCurrentPage}
+          setCurrentPage={(page) => {
+            setCurrentPage(page);
+            updateQueryParams(search, field); // Sayfa numarasını URL'ye ekle
+          }}
           jobsPerPage={jobsPerPage}
           setJobsPerPage={setJobsPerPage}
         />

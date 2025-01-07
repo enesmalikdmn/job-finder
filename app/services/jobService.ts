@@ -41,26 +41,50 @@ const refreshToken = async () => {
   throw new Error('No refresh token available');
 };
 
-// Response interceptor - Token yenileme işlemi burada yapılacak
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
     // Eğer 401 hatası alındıysa ve henüz yenileme yapılmadıysa
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Eğer bir token yenileme işlemi devam ediyorsa, istekleri sıraya koy
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        });
+      }
+
       originalRequest._retry = true; // Yeniden deneyin
+      isRefreshing = true;  // Yenileme işlemi başladığını işaretle
+
       try {
         const newToken = await refreshToken(); // Yeni token al
         originalRequest.headers['Authorization'] = `Bearer ${newToken}`; // Yeni token'ı başlığa ekle
+
+        // Yenilenen token'ı bekleyen tüm isteklerle birlikte tekrar gönder
+        failedQueue.forEach((prom) => prom.resolve());
+        failedQueue = [];
+
         return axios(originalRequest); // Yeniden orijinal isteği gönder
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError);
+        // Token yenileme başarısızsa, tüm bekleyen isteklerin reddedilmesi
+        failedQueue.forEach((prom) => prom.reject(refreshError));
+        failedQueue = [];
         return Promise.reject(refreshError); // Token yenileme başarısızsa hatayı reddet
+      } finally {
+        isRefreshing = false;  // Token yenileme işlemi tamamlandı
       }
     }
+
     return Promise.reject(error); // Diğer hatalar için
   }
 );
+
 
 export const getJobs = async ({
   page = 1,

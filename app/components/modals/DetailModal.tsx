@@ -14,7 +14,7 @@ import {
   Tag,
   Divider,
 } from "@chakra-ui/react";
-import { Job } from "../../types/jobTypes";
+import { Job } from "../../../types/jobTypes";
 
 export const DetailModal = ({
   isOpen,
